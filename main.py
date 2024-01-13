@@ -1,7 +1,7 @@
 import random
 
 
-POPULACJA = 100
+POPULACJA = 1000
 ITERACJE = 1000
 wyniki = [(-5, -150), (4, 77), (-1, -30), (-2, 0), (-1, 10), (1 / 2, 131 / 8), (1, 18), (2, 25), (3, 32), (4, 75),
           (5, 130)]
@@ -97,20 +97,20 @@ def main():
     for _ in range(ITERACJE):
         # selekcja
         populacja.sort(key=funkcja_oceny)
-        populacja = populacja[:50]
+        populacja = populacja[:int(POPULACJA / 2)]
 
         # krzyżowanie
         for i in range(0, len(populacja), 2):
             populacja.append(krzyzuj(populacja[i], populacja[i + 1]))
 
         # mutacja
-        # for i in range(len(populacja)):
-        #     populacja[i] = mutuj(populacja[i])
+        for i in range(len(populacja)):
+            populacja[i] = mutuj(populacja[i])
 
     # wydruk najlepszego wyniku
     a, b, c, d = populacja[0]
     for x, y in wyniki:
-        print(f"{wielomian(a, b, c, d, x)}\t{y}")
+        print(f"{x}: algorytm= {wielomian(a, b, c, d, x)} podany wynik= {y}")
 
     print()
     print(f"{populacja[0][0]}*x^3 + {populacja[0][1]}*x^2 + {populacja[0][2]}*x + {populacja[0][3]}")
