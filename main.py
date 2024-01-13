@@ -2,7 +2,7 @@ import random
 
 
 POPULACJA = 1000
-ITERACJE = 1000
+ITERACJE = 10
 wyniki = [(-5, -150), (4, 77), (-1, -30), (-2, 0), (-1, 10), (1 / 2, 131 / 8), (1, 18), (2, 25), (3, 32), (4, 75),
           (5, 130)]
 
@@ -78,13 +78,13 @@ def mutuj(osobnik):
         return a, b, c, d
     x = random.randint(0, 3)
     if x == 0:
-        a += random.randint(-1, 1)
+        a = random.randint(-15, 15)
     elif x == 1:
-        b += random.randint(-1, 1)
+        b = random.randint(-15, 15)
     elif x == 2:
-        c += random.randint(-1, 1)
+        c = random.randint(-15, 15)
     else:
-        d += random.randint(-1, 1)
+        d = random.randint(-15, 15)
     # print("M", end="")
     return a, b, c, d
 
@@ -97,11 +97,27 @@ def main():
     for _ in range(ITERACJE):
         # selekcja
         populacja.sort(key=funkcja_oceny)
-        populacja = populacja[:int(POPULACJA / 2)]
 
+        populacja = populacja[:int(POPULACJA / 2)]
+        ruletka = [funkcja_oceny(o1) / sum([funkcja_oceny(oM) for oM in populacja]) for o1 in populacja]
+        print(ruletka)
         # krzyżowanie
         for i in range(0, len(populacja), 2):
-            populacja.append(krzyzuj(populacja[i], populacja[i + 1]))
+            r1, r2 = random.random(), random.random()
+            h1, h2 = 0, 0
+
+            j = 0
+            while r1 > 0:
+                r1 -= ruletka[j]
+                h1 = j
+                j += 1
+
+            j = 0
+            while r2 > 0:
+                r2 -= ruletka[j]
+                h2 = j
+                j += 1
+            populacja.append(krzyzuj(populacja[h1], populacja[h2]))
 
         # mutacja
         for i in range(len(populacja)):
